@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\VerificationController;
 use App\Http\Controllers\Admin\ContentController; // Untuk konten dan pemasaran
+
+use App\Http\Controllers\Admin\ReportController; // Untuk laporan
 use App\Http\Controllers\Api\BookingController as ApiBookingController;
 use App\Http\Controllers\Api\PaymentController as ApiPaymentController;
 
@@ -90,9 +92,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('content/banners', [ContentController::class, 'storeBanner'])->name('content.banners.store');
         Route::post('content/banners/{banner}', [ContentController::class, 'updateBanner'])->name('content.banners.update'); // Ubah dari PUT ke POST untuk file
         Route::delete('content/banners/{banner}', [ContentController::class, 'destroyBanner'])->name('content.banners.destroy'); // Tambahkan ini });
-         Route::put('content/banners/{banner}/status', [ContentController::class, 'updateBannerStatus'])->name('content.banners.updateStatus');
+        Route::put('content/banners/{banner}/status', [ContentController::class, 'updateBannerStatus'])->name('content.banners.updateStatus');
 
-
+        // Add Report Route
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     });
     // Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
     //     // Rute untuk manajemen mobil

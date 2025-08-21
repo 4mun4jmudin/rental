@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen, onClose }) {
         { name: 'Manajemen Keuangan', href: route('admin.payments.index'), icon: BanknotesIcon, current: route().current('admin.payments.*'), roles: ['admin', 'pemilik_rental'] },
         { name: 'Moderasi & Verifikasi', href: route('admin.verifications.index'), icon: ShieldCheckIcon, current: route().current('admin.verifications.*'), roles: ['admin'] },
         { name: 'Konten & Pemasaran', href: route('admin.content.index'), icon: MegaphoneIcon, current: route().current('admin.content.*'), roles: ['admin'] },
-        { name: 'Laporan & Analitik', href: '#', icon: ChartBarIcon, current: false, roles: ['admin', 'pemilik_rental'] },
+        { name: 'Laporan & Analitik', href: route('admin.reports.index'), icon: ChartBarIcon, current: route().current('admin.reports.*'), roles: ['admin', 'pemilik_rental'] },
         { name: 'Pengaturan Sistem', href: '#', icon: Cog6ToothIcon, current: false, roles: ['admin'] },
     ];
 
