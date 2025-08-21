@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\VerificationController;
 use App\Http\Controllers\Admin\ContentController; // Untuk konten dan pemasaran
 
 use App\Http\Controllers\Admin\ReportController; // Untuk laporan
+use App\Http\Controllers\Admin\SettingController; // Untuk pengaturan sistem
 use App\Http\Controllers\Api\BookingController as ApiBookingController;
 use App\Http\Controllers\Api\PaymentController as ApiPaymentController;
 
@@ -96,6 +97,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Add Report Route
         Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+
+        // Rute Pengaturan Sistem
+        Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::put('/settings/password', [SettingController::class, 'changePassword'])->name('settings.change_password');
     });
     // Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
     //     // Rute untuk manajemen mobil

@@ -12,6 +12,7 @@ import {
     ChartBarIcon,
     Cog6ToothIcon,
     XMarkIcon,
+    ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
 // Komponen internal untuk tautan navigasi
@@ -44,7 +45,7 @@ export default function Sidebar({ isOpen, onClose }) {
         { name: 'Moderasi & Verifikasi', href: route('admin.verifications.index'), icon: ShieldCheckIcon, current: route().current('admin.verifications.*'), roles: ['admin'] },
         { name: 'Konten & Pemasaran', href: route('admin.content.index'), icon: MegaphoneIcon, current: route().current('admin.content.*'), roles: ['admin'] },
         { name: 'Laporan & Analitik', href: route('admin.reports.index'), icon: ChartBarIcon, current: route().current('admin.reports.*'), roles: ['admin', 'pemilik_rental'] },
-        { name: 'Pengaturan Sistem', href: '#', icon: Cog6ToothIcon, current: false, roles: ['admin'] },
+        { name: 'Pengaturan Sistem', href: route('admin.settings.index'), icon: Cog6ToothIcon, current: route().current('admin.settings.*'), roles: ['admin'] },
     ];
 
     // Konten JSX untuk sidebar agar tidak diulang
@@ -67,6 +68,17 @@ export default function Sidebar({ isOpen, onClose }) {
                             </NavLink>
                         ))}
                 </nav>
+                <div className="mt-auto flex-shrink-0 p-2">
+                    <Link
+                        href={route('logout')}
+                        method="post"
+                        as="button"
+                        className="group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-gray-400 transition-colors duration-150 hover:bg-gray-700 hover:text-white"
+                    >
+                        <ArrowRightOnRectangleIcon className="mr-3 h-6 w-6 flex-shrink-0" />
+                        Logout
+                    </Link>
+                </div>
             </div>
         </div>
     );
