@@ -10,7 +10,7 @@ class Car extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * Atribut yang dapat diisi secara massal.
      *
      * @var array<int, string>
      */
@@ -27,22 +27,19 @@ class Car extends Model
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
-        'features' => 'array',
-        'image_urls' => 'array',
+        'features' => 'array',      // Otomatis konversi JSON -> Array dan sebaliknya
+        'image_urls' => 'array',  // Otomatis konversi JSON -> Array dan sebaliknya
+        'price_per_day' => 'decimal:2',
     ];
 
-    // Relasi: Mobil memiliki banyak pesanan (bookings)
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
-    }
-
-    // Relasi: Mobil memiliki banyak ulasan (reviews)
+    /**
+     * Relasi ke tabel reviews.
+     */
     public function reviews()
     {
         return $this->hasMany(Review::class);

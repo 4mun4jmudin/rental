@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
+
 
 class Booking extends Model
 {
@@ -55,5 +58,12 @@ class Booking extends Model
     public function review()
     {
         return $this->hasOne(Review::class);
+    }
+
+    protected function rentalDays(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Carbon::parse($this->start_date)->diffInDays(Carbon::parse($this->end_date)) + 1,
+        );
     }
 }

@@ -1,13 +1,10 @@
 import React from 'react';
-import AdminDashboard from '@/Pages/AdminDashboard';
+import AdminLayout from '@/Layouts/AdminLayout'; // Impor layout utama
 import { Head, Link } from '@inertiajs/react';
 import {
     BanknotesIcon,
     CalendarDaysIcon,
     UserPlusIcon,
-    TruckIcon,
-    ArrowUpIcon,
-    ArrowDownIcon
 } from '@heroicons/react/24/outline';
 import { Line, Bar, Pie } from 'react-chartjs-2';
 import {
@@ -23,6 +20,7 @@ import {
     Legend,
 } from 'chart.js';
 
+// Registrasi komponen Chart.js (hanya perlu sekali)
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -35,12 +33,12 @@ ChartJS.register(
     Legend
 );
 
-// Komponen kecil untuk Kartu KPI
-const KpiCard = ({ title, value, icon, change, changeType }) => (
+// Komponen kecil untuk Kartu KPI (Key Performance Indicator)
+const KpiCard = ({ title, value, icon }) => (
     <div className="overflow-hidden rounded-lg bg-white p-5 shadow">
         <div className="flex items-center">
-            <div className="flex-shrink-0">
-                {React.createElement(icon, { className: 'h-6 w-6 text-gray-400' })}
+            <div className="flex-shrink-0 rounded-md bg-indigo-500 p-3">
+                {React.createElement(icon, { className: 'h-6 w-6 text-white' })}
             </div>
             <div className="ml-5 w-0 flex-1">
                 <dl>
@@ -54,7 +52,8 @@ const KpiCard = ({ title, value, icon, change, changeType }) => (
     </div>
 );
 
-export default function DashboardPage({ auth, kpi, bookingTrend, monthlyRevenue, popularCars, recentActivities, actionableItems }) {
+// Komponen utama halaman dasbor
+export default function DashboardIndex({ auth, kpi, bookingTrend, popularCars, recentActivities, actionableItems }) {
     
     // Data untuk Grafik Tren Pesanan
     const bookingTrendData = {
@@ -68,16 +67,6 @@ export default function DashboardPage({ auth, kpi, bookingTrend, monthlyRevenue,
         }]
     };
 
-    // Data untuk Grafik Pendapatan Bulanan
-    const monthlyRevenueData = {
-        labels: Object.keys(monthlyRevenue),
-        datasets: [{
-            label: 'Pendapatan (Rp)',
-            data: Object.values(monthlyRevenue),
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        }]
-    };
-    
     // Data untuk Grafik Mobil Populer
     const popularCarsData = {
         labels: Object.keys(popularCars),
@@ -94,13 +83,24 @@ export default function DashboardPage({ auth, kpi, bookingTrend, monthlyRevenue,
         }]
     };
 
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+        },
+    };
+
     return (
-        <AdminDashboard user={auth.user} title="Halaman Utama">
+        <AdminLayout user={auth.user} header="Halaman Utama">
+            <Head title="Dashboard Admin" />
+
             <div className="space-y-8">
                 {/* Bagian KPI Cards */}
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                    <KpiCard title="Pendapatan Hari Ini" value={`Rp ${new Intl.NumberFormat('id-ID').format(kpi.revenue_today)}`} icon={BanknotesIcon} />
-                    <KpiCard title="Pendapatan Bulan Ini" value={`Rp ${new Intl.NumberFormat('id-ID').format(kpi.revenue_month)}`} icon={BanknotesIcon} />
+                    <KpiCard title="Pendapatan Hari Ini" value={`Rp ${new Intl.NumberFormat('id-ID').format(kpi.revenue_today || 0)}`} icon={BanknotesIcon} />
+                    <KpiCard title="Pendapatan Bulan Ini" value={`Rp ${new Intl.NumberFormat('id-ID').format(kpi.revenue_month || 0)}`} icon={BanknotesIcon} />
                     <KpiCard title="Pesanan Baru Hari Ini" value={kpi.new_bookings_today} icon={CalendarDaysIcon} />
                     <KpiCard title="Pengguna Baru Hari Ini" value={kpi.new_users_today} icon={UserPlusIcon} />
                 </div>
@@ -108,36 +108,36 @@ export default function DashboardPage({ auth, kpi, bookingTrend, monthlyRevenue,
                 {/* Bagian Grafik */}
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     <div className="rounded-lg bg-white p-5 shadow lg:col-span-2">
-                        <h3 className="text-lg font-medium">Tren Pesanan 7 Hari Terakhir</h3>
-                        <Line data={bookingTrendData} />
+                        <h3 className="text-lg font-medium leading-6 text-gray-900">Tren Pesanan 7 Hari Terakhir</h3>
+                        <div className="mt-4">
+                            <Line options={chartOptions} data={bookingTrendData} />
+                        </div>
                     </div>
                     <div className="rounded-lg bg-white p-5 shadow">
-                        <h3 className="text-lg font-medium">Mobil Terpopuler</h3>
-                        <Pie data={popularCarsData} />
-                    </div>
-                    <div className="rounded-lg bg-white p-5 shadow lg:col-span-3">
-                        <h3 className="text-lg font-medium">Pendapatan 6 Bulan Terakhir</h3>
-                        <Bar data={monthlyRevenueData} />
+                        <h3 className="text-lg font-medium leading-6 text-gray-900">Mobil Terpopuler</h3>
+                        <div className="mt-4">
+                            <Pie data={popularCarsData} />
+                        </div>
                     </div>
                 </div>
 
                 {/* Bagian Aktivitas & Tugas */}
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     <div className="rounded-lg bg-white p-5 shadow">
-                        <h3 className="text-lg font-medium">Aktivitas Terbaru</h3>
-                        <ul className="mt-4 space-y-3">
+                        <h3 className="text-lg font-medium leading-6 text-gray-900">Aktivitas Terbaru</h3>
+                        <ul role="list" className="mt-4 divide-y divide-gray-200">
                             {recentActivities.map((activity, index) => (
-                                <li key={index} className="border-l-4 border-blue-500 pl-4 text-sm text-gray-600">
+                                <li key={index} className="py-3 text-sm text-gray-600">
                                     {activity}
                                 </li>
                             ))}
                         </ul>
                     </div>
                     <div className="rounded-lg bg-white p-5 shadow">
-                        <h3 className="text-lg font-medium">Perlu Tindakan</h3>
-                        <ul className="mt-4 space-y-3">
+                        <h3 className="text-lg font-medium leading-6 text-gray-900">Perlu Tindakan</h3>
+                        <ul role="list" className="mt-4 divide-y divide-gray-200">
                              {actionableItems.map((item, index) => (
-                                <li key={index} className="flex items-center justify-between text-sm">
+                                <li key={index} className="flex items-center justify-between py-3 text-sm">
                                     <p className="text-gray-700">{item.text}</p>
                                     <Link href={item.href} className="font-semibold text-indigo-600 hover:text-indigo-800">Lihat</Link>
                                 </li>
@@ -146,6 +146,6 @@ export default function DashboardPage({ auth, kpi, bookingTrend, monthlyRevenue,
                     </div>
                 </div>
             </div>
-        </AdminDashboard>
+        </AdminLayout>
     );
 }
